@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageId>bikmish.YOLO</PackageId>
+    <Version>1.0.2</Version>
+    <Authors>BiktimirovM</Authors>
+    <Company>FIIT441</Company>
+    <Product>YOLO</Product>
+    <Description>Package allows to use YOLO algorithm to detect objects at the input image and save results as CSV file.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.7.0" />
+    <PackageReference Include="SixLabors.Imagesharp" Version="3.0.2" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0" />
+  </ItemGroup>
+
+</Project>
