@@ -29,6 +29,9 @@ namespace dotnet_lab1v2YOLO
                 }
             }
             public bool Exists(string path) => File.Exists(path);
+
+            public void Print(string msg) => Console.WriteLine(msg);
+
         }
         static async Task Main(string[] args)
         {
@@ -36,8 +39,10 @@ namespace dotnet_lab1v2YOLO
             var tokenSource = new CancellationTokenSource();
             var tasks = Enumerable.Range(0, args.Length).Select(i =>
             {
-                return detector.Analyze(args[(int)i], tokenSource.Token);
-            });
+                var t = detector.Analyze(args[(int)i], tokenSource.Token);
+                Console.WriteLine($"{i}");
+                return t;
+            }).ToArray();
 
             Console.WriteLine("Press Enter to continue or type 'c' to cancel detection");
             if (Console.ReadLine() == "c")
@@ -53,7 +58,6 @@ namespace dotnet_lab1v2YOLO
             {
                 Console.WriteLine("Detecting cancelled!");
             }
-
         }
 
         private static void SaveResults((string fileName, string curCsv, Image<Rgb24> curImg) res)
