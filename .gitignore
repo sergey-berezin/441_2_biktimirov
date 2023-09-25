@@ -9,6 +9,10 @@
 # VS Code
 .vscode/
 
+# Visual Studio
+.vs/
+runtimes/
+
 # Build results
 
 [Dd]ebug/

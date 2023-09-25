@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "dotnet_lab1v2YOLO": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\Users\\bikmish\\workspace\\cmc\\4 курс\\C# dotnet\\lab1\\dotnet_lab1v2YOLO\\dotnet_lab1v2YOLO\\dataset\\cat.jpg\"\r\n\"C:\\Users\\bikmish\\workspace\\cmc\\4 курс\\C# dotnet\\lab1\\dotnet_lab1v2YOLO\\dotnet_lab1v2YOLO\\dataset\\catWithChair.jpg\"\r\n\"C:\\Users\\bikmish\\workspace\\cmc\\4 курс\\C# dotnet\\lab1\\dotnet_lab1v2YOLO\\dotnet_lab1v2YOLO\\dataset\\bird.jpg\""
+    }
+  }
+}
