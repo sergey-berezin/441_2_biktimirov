@@ -5,7 +5,13 @@ VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnet_lab1v2YOLO", "dotnet_lab1v2YOLO\dotnet_lab1v2YOLO.csproj", "{407B9403-E331-4219-9944-4972FC9137E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotnet_lab1v2YOLOasync", "dotnet_lab1v2YOLOasync\dotnet_lab1v2YOLOasync.csproj", "{60E72447-FC4C-4913-817C-A3038C61E86E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnet_lab1v2YOLOasync", "dotnet_lab1v2YOLOasync\dotnet_lab1v2YOLOasync.csproj", "{60E72447-FC4C-4913-817C-A3038C61E86E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YoloView", "YoloView\YoloView.csproj", "{A1144E7C-1327-4CA8-957F-6277CC186B32}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YoloViewModel", "YoloViewModel\YoloViewModel.csproj", "{748A5072-DD93-4615-97F2-462CE0A9366A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AsyncCommand", "AsyncCommand\AsyncCommand.csproj", "{0909128C-B321-4FC6-BFE5-3B95CFEE5BCA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +27,18 @@ Global
 		{60E72447-FC4C-4913-817C-A3038C61E86E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60E72447-FC4C-4913-817C-A3038C61E86E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{60E72447-FC4C-4913-817C-A3038C61E86E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1144E7C-1327-4CA8-957F-6277CC186B32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1144E7C-1327-4CA8-957F-6277CC186B32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1144E7C-1327-4CA8-957F-6277CC186B32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1144E7C-1327-4CA8-957F-6277CC186B32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{748A5072-DD93-4615-97F2-462CE0A9366A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{748A5072-DD93-4615-97F2-462CE0A9366A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{748A5072-DD93-4615-97F2-462CE0A9366A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{748A5072-DD93-4615-97F2-462CE0A9366A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0909128C-B321-4FC6-BFE5-3B95CFEE5BCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0909128C-B321-4FC6-BFE5-3B95CFEE5BCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0909128C-B321-4FC6-BFE5-3B95CFEE5BCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0909128C-B321-4FC6-BFE5-3B95CFEE5BCA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
