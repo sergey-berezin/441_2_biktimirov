@@ -60,7 +60,7 @@ namespace YOLOlib
 
             session = new InferenceSession(neuralNetName);
         }
-        public async Task<(string fileName, string csvRecord, Image<Rgb24> detectedImage)> Analyze(string path, CancellationToken ctoken)
+        public async Task<(string fileName, string csvRecord, Image<Rgb24> detectedImage, List<(string, double)> detections)> Analyze(string path, CancellationToken ctoken)
         {
             return await Task.Factory.StartNew(_ => {
                 using var image = Image.Load<Rgb24>(path);
@@ -260,6 +260,8 @@ namespace YOLOlib
                     }
                 }
 
+                List<(string, double)> detections = objects.Select(x => (labels[x.Class], x.Confidence)).OrderBy(y => y.Item1).ThenBy(z => z.Confidence).ToList();
+
                 string curCsv = "";
                 foreach (var obj in objects)
                     curCsv += String.Format(new NumberFormatInfo() { NumberDecimalSeparator = "." }, "{0},{1},{2},{3},{4},{5}\n", path, labels[obj.Class], obj.XMin, obj.YMin, obj.XMax - obj.XMin, obj.YMax - obj.YMin);
@@ -268,7 +270,7 @@ namespace YOLOlib
                 Annotate(final, objects);
                 //File.AppendAllText("results.csv", curCsv.ToString());
                 //final.SaveAsJpeg(path.Replace("." + path.Split(".").LastOrDefault(), "") + "Detected.jpg");
-                return (path.Replace("." + path.Split(".").LastOrDefault(), "") + "Detected.jpg", curCsv, final);
+                return (path.Replace("." + path.Split(".").LastOrDefault(), "") + "Detected.jpg", curCsv, final, detections);
             }, ctoken, TaskCreationOptions.LongRunning);
 
         }
