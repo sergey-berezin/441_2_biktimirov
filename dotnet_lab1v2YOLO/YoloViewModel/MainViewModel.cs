@@ -62,7 +62,7 @@ namespace YoloViewModel
                     ds.Print("Detection cancelled!");
                 }
             });
-            CancelDetectingCmd = new AsyncRelayCommand(_ => { tokenSource?.Cancel(); return Task.CompletedTask; });
+            CancelDetectingCmd = new AsyncRelayCommand(_ => { tokenSource?.Cancel(); return Task.CompletedTask; }, _ => tokenSource != null);
         }
     }
 }
