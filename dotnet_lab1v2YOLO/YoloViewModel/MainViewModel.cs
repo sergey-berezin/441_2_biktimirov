@@ -1,4 +1,6 @@
 ﻿using AsyncCommand;
+using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Windows.Input;
 
 namespace YoloViewModel
@@ -12,34 +14,52 @@ namespace YoloViewModel
         List<string> ChooseFolder();
         void Print(string message);
     }
-    public class Detection
-    {
-        public string sourcePath { get; set; }
-        public string detectedClass { get; set; }
-        public double confidence { get; set; }
-        public Detection(string p, string c, double d) => (sourcePath,detectedClass,confidence) = (p,c,d);
-    }
+
     public class MainViewModel : ViewModelBase
     {
         public AsyncRelayCommand ChooseDirCmd { get; private set; }
         public AsyncRelayCommand CancelDetectingCmd { get; private set; }
-        public List<Detection> Dets { get; private set; }
-        private Detection? selection;
-        public Detection? SelectedImg { get => selection;
-            set { selection = value; RaisePropertyChanged(nameof(imgPath)); } }
-        public string imgPath { get => SelectedImg != null ? SelectedImg.sourcePath.Replace("." + SelectedImg.sourcePath.Split(".").LastOrDefault(), "") + "Detected.jpg" : Directory.GetCurrentDirectory()+"\\kittens.jpg"; }
+        public AsyncRelayCommand ClearDatabaseCmd { get; private set; }
+        private List<string> storedImagesHash => imgLib.Images.Select(x => x.sourcePath + x.detectedClass + $"{x.confidence:N2}").ToList();
+        private List<string> storedImagesSourcePaths => imgLib.Images.Select(x => x.sourcePath).Distinct().ToList();
+        public List<LoadedImage> LoadedImages => Detections.Select(x => new LoadedImage(x)).OrderBy(x => x.detectedClass).ThenBy(y => y.confidence).ToList();
+        private ConcurrentStack<StoredImage> detections;
+        public List<StoredImage> Detections { 
+            get {
+                if (detections.Any() == true)
+                {
+                    while(detections.TryPop(out var det) == true)
+                        if (!storedImagesHash.Contains(GetImageHash(det)))
+                        {
+                            Debug.Print($"Added {GetImageHash(det)}, {detections.Count} left");
+                            imgLib.Images.Add(det);
+                        }
+                    imgLib.SaveChanges();
+                }
+                return imgLib.Images.ToList(); 
+            } 
+        }
+        private LoadedImage? selectedLoad;
+        public LoadedImage? SelectedLoadedImg
+        {
+            get => selectedLoad;
+            set { selectedLoad = value; RaisePropertyChanged(nameof(SelectedLoadedImg)); }
+        }
         private YOLOlib.Detector detector;
-        private CancellationTokenSource tokenSource;
+        private CancellationTokenSource? tokenSource;
+        private ImageLibrary imgLib = new ImageLibrary();
+        private string GetImageHash(StoredImage img) => img.sourcePath + img.detectedClass + $"{img.confidence:N2}";
         public MainViewModel(YOLOlib.IFileServices fs, IDirectoryServices ds)
         {
             detector = new YOLOlib.Detector(fs);
-            Dets = new List<Detection>();
+            detections = new ConcurrentStack<StoredImage>();
+
             ChooseDirCmd = new AsyncRelayCommand(async _ =>
             {
                 try
                 {
                     List<string> selectedFiles = ds.ChooseFolder();
-                    selectedFiles.RemoveAll(x => x.Split(".").LastOrDefault() != "jpg" || x.EndsWith("Detected.jpg"));
+                    selectedFiles.RemoveAll(x => x.Split(".").LastOrDefault() != "jpg" || x.EndsWith("Detected.jpg") || storedImagesSourcePaths.Contains(x));
 
                     tokenSource = new CancellationTokenSource();
                     var tasks = Enumerable.Range(0, selectedFiles.Count).Select(i =>
@@ -51,11 +71,15 @@ namespace YoloViewModel
 
                     for (int i = 0; i < selectedFiles.Count; ++i)
                     {
-                        tasks[i].Result.detections.ForEach(x => Dets.Add(new Detection(selectedFiles[i], x.Item1, x.Item2)));
-                        tasks[i].Result.detectedImage.Save(selectedFiles[i].Replace("." + selectedFiles[i].Split(".").LastOrDefault(), "") + "Detected.jpg");
+                        tasks[i].Result.detections.ForEach(x =>
+                        {
+                            var detectedResult = new StoredImage(tasks[i].Result.detectedImage, selectedFiles[i], x.Item1, x.Item2);
+                            if (!detections.Any(x => GetImageHash(x) == GetImageHash(detectedResult)))
+                                detections.Push(detectedResult);
+                        });
                     }
-                    Dets = Dets.OrderBy(x => x.detectedClass).ThenBy(y => y.confidence).ToList();
-                    RaisePropertyChanged(nameof(Dets));
+                    RaisePropertyChanged(nameof(LoadedImages));
+                    tokenSource = null;
                 }
                 catch (OperationCanceledException)
                 {
@@ -63,6 +87,7 @@ namespace YoloViewModel
                 }
             });
             CancelDetectingCmd = new AsyncRelayCommand(_ => { tokenSource?.Cancel(); return Task.CompletedTask; }, _ => tokenSource != null);
+            ClearDatabaseCmd = new AsyncRelayCommand(_ => { imgLib.Images.RemoveRange(imgLib.Images); imgLib.SaveChanges(); Debug.Print("Clearing db..."); RaisePropertyChanged(nameof(LoadedImages)); return Task.CompletedTask; }, _ => imgLib.Images.Any());
         }
     }
 }
