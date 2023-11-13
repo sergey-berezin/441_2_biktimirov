@@ -73,7 +73,7 @@ namespace YoloViewModel
                     {
                         tasks[i].Result.detections.ForEach(x =>
                         {
-                            var detectedResult = new StoredImage(tasks[i].Result.detectedImage, selectedFiles[i], x.Item1, x.Item2);
+                            var detectedResult = new StoredImage(tasks[i].Result.detectedImage, Image.Load<Rgb24>(selectedFiles[i]), selectedFiles[i], x.Item1, x.Item2);
                             if (!detections.Any(x => GetImageHash(x) == GetImageHash(detectedResult)))
                                 detections.Push(detectedResult);
                         });
