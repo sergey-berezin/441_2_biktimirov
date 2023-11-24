@@ -1,0 +1,72 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+    <input type="file" id="fileInput" />
+    <button onclick="analyzeImage()">Analyze</button>
+    <div id="progressIndicator" style="display: none;">Analyzing image...</div>
+    <div id="results"></div>
+
+    <script>
+    function getBase64Image(imgData) {
+        let pos = imgData.indexOf('base64,');
+        return pos > -1 ? imgData.slice(pos + 'base64,'.length) : imgData;
+    }
+
+    async function AnalyzeImageOnServer(img64)
+    {
+        await fetch("https://localhost:7074/DetectObjects",
+        {
+            method: "POST",
+            headers: 
+            {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(img64),
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('progressIndicator').style.display = 'none';
+            var resultDiv = document.getElementById('results');
+            resultDiv.innerHTML = '';
+            for (let i = 0; i < data.length; i++)
+            {
+                var image = new Image();
+                var imageSource = "data:image/jpeg;base64," + data[i].imgData;
+                //console.log(data[i].imgData);
+                image.src = imageSource
+
+                const curRes = document.createElement('div');
+                //console.log(data[0]);
+                curRes.textContent = `Object: ${data[i].class}, Confidence: ${data[i].confidence.toPrecision(2)}`;
+
+                resultDiv.appendChild(curRes);
+                resultDiv.appendChild(image);
+            }    
+
+        });
+    }
+
+    async function analyzeImage() {
+        document.getElementById('progressIndicator').style.display = 'block';
+        const fileInput = document.getElementById('fileInput');
+        const file = fileInput.files[0];
+
+        var reader = new FileReader();
+        reader.onload = function() {
+            let base64Image = getBase64Image(reader.result);
+            //console.log(reader.result);
+            //console.log(base64Image);
+            AnalyzeImageOnServer(base64Image);
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+    </script>
+</div>
