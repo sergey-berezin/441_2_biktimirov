@@ -4,13 +4,10 @@ using YoloMVC.Models;
 
 namespace YoloMVC.Controllers
 {
-    //[Route("api/[controller]")]
-    //[ApiController]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IDetector _detector;
-
         public HomeController(ILogger<HomeController> logger, IDetector detector) => (_logger, _detector) = (logger, detector);
 
         [HttpPost]

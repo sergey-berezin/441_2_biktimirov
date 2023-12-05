@@ -1,10 +1,9 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Detector";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Yolo Detector</h1>
 
     <input type="file" id="fileInput" />
     <button onclick="analyzeImage()">Analyze</button>
@@ -32,21 +31,20 @@
         .then(data => {
             document.getElementById('progressIndicator').style.display = 'none';
             var resultDiv = document.getElementById('results');
-            resultDiv.innerHTML = '';
+            var hr = document.createElement('hr');
+            //hr.style.borderTop = "thick solid #0000FF";
+            resultDiv.appendChild(hr);
             for (let i = 0; i < data.length; i++)
             {
-                var image = new Image();
-                var imageSource = "data:image/jpeg;base64," + data[i].imgData;
-                //console.log(data[i].imgData);
-                image.src = imageSource
-
+                //console.log(data[i].img64);
                 const curRes = document.createElement('div');
-                //console.log(data[0]);
                 curRes.textContent = `Object: ${data[i].class}, Confidence: ${data[i].confidence.toPrecision(2)}`;
 
                 resultDiv.appendChild(curRes);
-                resultDiv.appendChild(image);
             }    
+
+            let imgElement = `<img src="data:image/jpeg;base64,${data[0]?.img64}" alt="Image loading error"/>`;
+            resultDiv.insertAdjacentHTML('beforeend', imgElement);
 
         });
     }

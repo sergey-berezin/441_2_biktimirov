@@ -27,12 +27,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-//app.UseEndpoints(endpoints =>
-//{
-//    endpoints.MapControllerRoute(
-//        name: "default",
-//        pattern: "api/{controller=home}/{action=Index}/{id?}");
-//});
-//app.MapControllers();
-
 app.Run();
+
+// Make the implicit Program class public so test projects can access it
+public partial class Program { }
