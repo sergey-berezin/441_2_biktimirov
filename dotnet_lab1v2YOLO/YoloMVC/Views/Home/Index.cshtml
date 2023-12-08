@@ -34,18 +34,28 @@
             var hr = document.createElement('hr');
             //hr.style.borderTop = "thick solid #0000FF";
             resultDiv.appendChild(hr);
-            for (let i = 0; i < data.length; i++)
+
+            if (data.length > 0)
             {
-                //console.log(data[i].img64);
-                const curRes = document.createElement('div');
-                curRes.textContent = `Object: ${data[i].class}, Confidence: ${data[i].confidence.toPrecision(2)}`;
+                for (let i = 0; i < data.length; i++)
+                {
+                    //console.log(data[i].img64);
+                    const curRes = document.createElement('div');
+                    curRes.textContent = `Object: ${data[i].class}, Confidence: ${data[i].confidence.toPrecision(2)}`;
 
-                resultDiv.appendChild(curRes);
-            }    
+                    resultDiv.appendChild(curRes);
+                }    
 
-            let imgElement = `<img src="data:image/jpeg;base64,${data[0]?.img64}" alt="Image loading error"/>`;
-            resultDiv.insertAdjacentHTML('beforeend', imgElement);
+                let imgElement = `<img src="data:image/jpeg;base64,${data[0]?.img64}" alt="Image loading error"/>`;
+                resultDiv.insertAdjacentHTML('beforeend', imgElement);
+            }
+            else //no objects found <=> data.length == 0
+            {
+                const emptyRes = document.createElement('div');
+                emptyRes.textContent = `No objects found.`;
 
+                resultDiv.appendChild(emptyRes);
+            }
         });
     }
 
