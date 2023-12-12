@@ -49,12 +49,30 @@ namespace ControllersScenarioTests
         }
 
         [Fact]
-        public async Task ErrorScenario()
+        public async Task ErrorScenarioInvalidBase64()
         {
             var client = _fixture.CreateClient();
             string base64Image = "eminem";
             var response = await client.PostAsJsonAsync("https://localhost:7074/DetectObjects", base64Image);
-            Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task ErrorScenarioNullBase64()
+        {
+            var client = _fixture.CreateClient();
+            string base64Image = null;
+            var response = await client.PostAsJsonAsync("https://localhost:7074/DetectObjects", base64Image);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task ErrorScenarioWrongUri()
+        {
+            var client = _fixture.CreateClient();
+            string base64Image = Convert.ToBase64String(File.ReadAllBytes("C:\\Users\\bikmish\\workspace\\cmc\\4 курс\\C# dotnet\\lab1\\dotnet_YOLO\\dotnet_lab1v2YOLO\\dataset\\catWithChair.jpg"));
+            var response = await client.PostAsJsonAsync("https://thebestobjectdetectionsiteever.net/detectus", base64Image);
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Net;
 using YoloMVC.Models;
 
 namespace YoloMVC.Controllers
@@ -19,10 +20,20 @@ namespace YoloMVC.Controllers
                 var imageObjects = await _detector.ProcessImages(Convert.FromBase64String(img64str));
                 return Ok(imageObjects);
             }
+            catch (FormatException fe)
+            {
+                _logger.LogCritical($"The format of base64 image representation is invalid (empty or contains a non-base-64 character): {fe.Message}", fe);
+                return StatusCode((int)HttpStatusCode.BadRequest, fe.Message);
+            }
+            catch (ArgumentNullException ane)
+            {
+                _logger.LogCritical($"The base64 image representation is null", ane);
+                return StatusCode((int)HttpStatusCode.BadRequest, ane.Message);
+            }
             catch (Exception ex)
             {
                 _logger.LogCritical(ex.Message, ex);
-                return StatusCode(500, ex.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
             }
         }
 
